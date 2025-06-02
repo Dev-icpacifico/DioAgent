@@ -1,0 +1,30 @@
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "WHATSAPP_BUSINESS_ID",
+      "changes": [
+        {
+          "value": {
+            "messages": [
+              {
+                "from": "56912345678",
+                "id": "wamid.HBgLM...",
+                "timestamp": "1717329000",
+                "text": {
+                  "body": "Hola, ¿tienen stock del producto A?"
+                },
+                "type": "text"
+              }
+            ],
+            "metadata": {
+              "display_phone_number": "14154443333",
+              "phone_number_id": "1234567890"
+            }
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
