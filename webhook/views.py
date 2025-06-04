@@ -4,6 +4,7 @@ import os
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse, HttpResponse
 from dotenv import load_dotenv
+from agent.agent_executor import executor  # 👈 Importa el agente
 
 load_dotenv()
 
@@ -21,39 +22,33 @@ def meta_webhook(request):
         print("❌ Token de verificación incorrecto")
         return HttpResponse("Token inválido", status=403)
 
-
     elif request.method == "POST":
-
         try:
-
             data = json.loads(request.body)
-
             print("📥 Payload completo recibido:")
-
             print(json.dumps(data, indent=2))
 
             value = data['entry'][0]['changes'][0]['value']
 
-            # ✅ Solo procesa si contiene mensajes (no status)
-
             if "messages" in value:
                 mensaje = value['messages'][0]['text']['body']
-
                 numero = value['messages'][0]['from']
 
                 print("📩 Mensaje recibido:", mensaje)
-
                 print("📞 Desde número:", numero)
 
-                enviar_respuesta(numero, "Mensaje recibido: " + mensaje)
+                # ✅ Obtener respuesta del agente
+                result = executor.invoke({"input": mensaje})
+                respuesta = result["output"]
+                print("🤖 Respuesta generada:", respuesta)
+
+                # ✅ Enviar respuesta por WhatsApp
+                enviar_respuesta(numero, respuesta)
 
             return JsonResponse({"status": "ok"})
 
-
         except Exception as e:
-
             print("❌ Error procesando mensaje:", str(e))
-
             return JsonResponse({"error": "error procesando payload"}, status=400)
 
 
